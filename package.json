@@ -1,0 +1,18 @@
+{
+  "name": "express-gestore-eventi",
+  "version": "1.0.0",
+  "description": "Ciao ragazzi, esercizio di oggi: express-gestore-eventi\r Esercizio\r Il nostro obiettivo sarà quello di creare le api per un applicazione che gestirà degli eventi con le relative prenotazioni. Proseguiamo per milestone in modo da avere tutto sotto controllo.\r Milestone 1\r Creiamo le seguenti rotte con relativo controller e router senza implementare le funzioni del controller.\r [GET] events/ (index)\r [POST] events/ (store)\r [PUT] events/:event (update)\r Milestone 2\r Creiamo il model models/event.js e prevediamo le seguenti proprietà:\r id\r title\r description\r date\r maxSeats (numero massimo di posti)\r Tramite dei metodi statici, facciamo in modo di poter leggere e salvare i dati su un file json dedicato.\r Un’istanza della classe rappresenterà un singolo evento.\r Milestone 3\r Usiamo il model nelle funzioni scritte nei controller e facciamo in modo che tramite dei metodi statici del model possiamo recuperare uno (tramite id) o tutti gli eventi.\r Prevediamo la possibilità di passare dei filtri tramite query string alla rotta index.\r Milestone 4\r Gestiamo eventuali errori 404 e 500 tramite dei middleware dedicati.\r Bonus\r Creiamo le seguenti rotte per gestire le prenotazioni\r [GET] events/:event/reservations (index)\r [POST] events/:event/reservations (store)\r [DELETE] events/:event/reservations/:reservation (destroy)\r Creiamo il model models/reservation.js e prevediamo le seguenti proprietà\r id\r firstName\r lastName\r email\r eventId\r Nel model degli eventi, prevediamo una funzione per recuperare tutte le prenotazioni associate\r Creiamo dei setter per ogni proprietà dei nostri model ed implementiamo una validazione dei dati ricevuti. Nel caso, lanciamo un errore\r Creare degli errori personalizzati estendendo la classe Error.\r Non permettiamo di aggiungere o togliere una prenotazione per un evento già passato\r Non permettiamo di aggiungere una prenotazione ad evento senza più posti disponibili.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "Dario Lo Forti",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.2"
+  }
+}
