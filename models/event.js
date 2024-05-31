@@ -14,16 +14,21 @@ class Event {
     }
 
     static getAll() {
-
-        const data = fs.readFileSync(eventsPath);
-        return JSON.parse(data);
-
+        try {
+            const data = fs.readFileSync(eventsPath, 'utf8');
+            return JSON.parse(data);
+        } catch (error) {
+        
+            return [];
+        }
     }
 
     static saveAll(events) {
-
-        fs.writeFileSync(eventsPath, JSON.stringify(events));
-
+        try {
+            fs.writeFileSync(eventsPath, JSON.stringify(events, null, 2));
+        } catch (error) {
+            throw new Error('Unable to save events');
+        }
     }
 
     static create({ title, description, date, maxSeats }) {
@@ -40,30 +45,17 @@ class Event {
     }
 
     static update(id, { title, description, date, maxSeats }) {
-
         const events = Event.getAll();
-        const event = events.find(event => event.id === id);
-
-        if (!event) {
+        const index = events.findIndex(event => event.id === parseInt(id));
+        if (index === -1) {
             throw new Error('Event not found');
         }
-
-        event.title = title || event.title;
-        event.description = description || event.description;
-        event.date = date || event.date;
-        event.maxSeats = maxSeats || event.maxSeats;
-
+        events[index].title = title || events[index].title;
+        events[index].description = description || events[index].description;
+        events[index].date = date || events[index].date;
+        events[index].maxSeats = maxSeats || events[index].maxSeats;
         Event.saveAll(events);
-
-        return updatedEvent;
-
-    }
-
-    static findById(id) {
-
-        const events = Event.getAll();
-        return events.find(event => event.id === id);
-        
+        return events[index];
     }
 }
 

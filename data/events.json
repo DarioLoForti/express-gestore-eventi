@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "title": "New Event",
+    "description": "This is a new event",
+    "date": "2024-06-15",
+    "maxSeats": 50
+  }
+]
