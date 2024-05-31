@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const Reservation = require('./reservation');
 
 const eventsPath = path.join(__dirname, '../data/events.json');
-
+const reservationsPath = path.join(__dirname, '../data/reservations.json');
 class Event {
 
     constructor(id, title, description, date, maxSeats) {
@@ -10,6 +11,41 @@ class Event {
         this.title = title;
         this.description = description;
         this.date = date;
+        this.maxSeats = maxSeats;
+    }
+
+    setId(id) {
+        if (typeof id !== 'number' || id <= 0) {
+            throw new Error('Invalid id');
+        }
+        this.id = id;
+    }
+
+    setTitle(title) {
+        if (typeof title !== 'string' || title.length === 0) {
+            throw new Error('Invalid title');
+        }
+        this.title = title;
+    }
+
+    setDescription(description) {
+        if (typeof description !== 'string' || description.length === 0) {
+            throw new Error('Invalid description');
+        }
+        this.description = description;
+    }
+
+    setDate(date) {
+        if (typeof date !== 'string' || date.length === 0) {
+            throw new Error('Invalid date');
+        }   
+        this.date = date;
+    }
+
+    setMaxSeats(maxSeats) {
+        if (typeof maxSeats !== 'number' || maxSeats <= 0) {
+            throw new Error('Invalid maxSeats');
+        }
         this.maxSeats = maxSeats;
     }
 
@@ -57,7 +93,19 @@ class Event {
         Event.saveAll(events);
         return events[index];
     }
+
+    static findById(id) {
+        const events = Event.getAll();
+        return events.find(event => event.id === id);
+    }
+
+
+    getReservations() {
+    const reservations = Reservation.findByEventId(this.id);
+    return reservations;
+    }
 }
+    
 
 
 
