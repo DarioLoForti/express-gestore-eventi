@@ -12,10 +12,6 @@ const handle500Error = require('./middlewares/handle500Error');
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-}); 
-
 app.use('/events', eventRoutes);
 
 app.use(handle404Error);

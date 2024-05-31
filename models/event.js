@@ -3,48 +3,45 @@ const path = require('path');
 const Reservation = require('./reservation');
 
 const eventsPath = path.join(__dirname, '../data/events.json');
-const reservationsPath = path.join(__dirname, '../data/reservations.json');
+
 class Event {
 
     constructor(id, title, description, date, maxSeats) {
         this.id = id;
-        this.title = title;
-        this.description = description;
-        this.date = date;
-        this.maxSeats = maxSeats;
+        this.setTitle(title);
+        this.setDescription(description);
+        this.setDate(date);
+        this.setMaxSeats(maxSeats);
     }
 
-    setId(id) {
-        if (typeof id !== 'number' || id <= 0) {
-            throw new Error('Invalid id');
-        }
-        this.id = id;
-    }
-
+    
     setTitle(title) {
         if (typeof title !== 'string' || title.length === 0) {
-            throw new Error('Invalid title');
+            throw new Error('Title must be a non-empty string');
         }
         this.title = title;
     }
 
+    
     setDescription(description) {
-        if (typeof description !== 'string' || description.length === 0) {
-            throw new Error('Invalid description');
+        if (typeof description !== 'string') {
+            throw new Error('Description must be a string');
         }
         this.description = description;
     }
 
+    
     setDate(date) {
-        if (typeof date !== 'string' || date.length === 0) {
-            throw new Error('Invalid date');
-        }   
-        this.date = date;
+        if (!(date instanceof Date) || isNaN(date)) {
+            throw new Error('Date must be a valid Date object');
+        }
+        this.date = date.toISOString(); 
     }
 
+    
     setMaxSeats(maxSeats) {
         if (typeof maxSeats !== 'number' || maxSeats <= 0) {
-            throw new Error('Invalid maxSeats');
+            throw new Error('MaxSeats must be a positive number');
         }
         this.maxSeats = maxSeats;
     }
@@ -52,7 +49,7 @@ class Event {
     static getAll() {
         try {
             const data = fs.readFileSync(eventsPath, 'utf8');
-            return JSON.parse(data);
+            return JSON.parse(data).map(event => new Event(event.id, event.title, event.description, new Date(event.date), event.maxSeats));
         } catch (error) {
         
             return [];
@@ -71,7 +68,7 @@ class Event {
 
         const events = Event.getAll();
         const id = events.length + 1;
-        const newEvent = new Event(id, title, description, date, maxSeats);
+        const newEvent = new Event(id, title, description, new Date(date), maxSeats);
 
         events.push(newEvent);
         Event.saveAll(events);
@@ -86,10 +83,10 @@ class Event {
         if (index === -1) {
             throw new Error('Event not found');
         }
-        events[index].title = title || events[index].title;
-        events[index].description = description || events[index].description;
-        events[index].date = date || events[index].date;
-        events[index].maxSeats = maxSeats || events[index].maxSeats;
+        events[index].setTitle = title || events[index].title;
+        events[index].setDescription = description || events[index].description;
+        events[index].setDate = date || events[index].date;
+        events[index].setMaxSeats = maxSeats || events[index].maxSeats;
         Event.saveAll(events);
         return events[index];
     }
@@ -99,10 +96,26 @@ class Event {
         return events.find(event => event.id === id);
     }
 
+    isEventInPast() {
+        const eventDate = new Date(this.date);
+        const currentDate = new Date();
+        return eventDate < currentDate;
+    }
+
+    isEventFull() {
+        const reservations = Reservation.findByEventId(this.id);
+        return reservations.length >= this.maxSeats;
+    
+    }
 
     getReservations() {
-    const reservations = Reservation.findByEventId(this.id);
-    return reservations;
+        return Reservation.findByEventId(this.id);
+    }
+    addReservation(reservation) {
+    }
+
+    removeReservation(reservationId) {
+        Reservation.delete(reservationId);
     }
 }
     

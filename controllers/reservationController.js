@@ -47,7 +47,7 @@ const store = (req, res) => {
             eventId
         });
 
-        event.addReservation(reservation);
+    
         res.status(201).json(reservation);
     } catch (error) {
         if (error instanceof EventNotFoundError || error instanceof ReservationNotAllowedError) {

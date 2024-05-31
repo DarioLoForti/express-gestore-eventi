@@ -54,7 +54,7 @@ class Reservation {
     static getAll() {
         try {
             const data = fs.readFileSync(reservationsPath, 'utf8');
-            return JSON.parse(data);
+            return JSON.parse(data).map(reservation => new Reservation(reservation.id, reservation.eventId, reservation.firstName, reservation.lastName, reservation.email));
         } catch (error) {
             return [];
         }
